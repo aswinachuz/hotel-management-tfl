@@ -12,10 +12,27 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
             min-height: 100vh;
-            color: #333;
+            color: #e8e8e8;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
         }
 
         .container {
@@ -25,20 +42,46 @@
         }
 
         .header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 30px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px;
+            padding: 40px;
             text-align: center;
-            margin-bottom: 30px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
         }
 
         .header h1 {
-            color: #2c3e50;
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            color: #ffffff;
+            font-size: 3em;
+            margin-bottom: 15px;
+            font-weight: 700;
+            text-shadow: 0 0 30px rgba(120, 119, 198, 0.5);
+            background: linear-gradient(135deg, #7877c6, #ff77c6, #77dbff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .date-selector {
@@ -324,39 +367,6 @@
             </div>
 
             <div class="form-group">
-                <h3>🏨 Today's Guest Stay Details</h3>
-                <div id="guestStayContainer">
-                    <div class="guest-entry">
-                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px;">
-                            <input type="text" placeholder="Guest Name & Location" class="guest-name" />
-                            <input type="text" placeholder="Contact Number" class="guest-contact" />
-                            <input type="number" placeholder="Pax" class="guest-pax" min="1" />
-                        </div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px;">
-                            <input type="text" placeholder="Booking Contact" class="guest-booking" />
-                            <input type="text" placeholder="Room Assigned" class="guest-room" />
-                            <input type="text" placeholder="Arrival Time" class="guest-arrival" />
-                        </div>
-                    </div>
-                </div>
-                <button type="button" onclick="addGuestEntry()" style="background: #27ae60; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; margin-top: 10px;">+ Add Guest</button>
-            </div>
-
-            <div class="form-group">
-                <h3>🍽️ Yesterday's Stay for Lunch</h3>
-                <div id="lunchStayContainer">
-                    <div class="lunch-entry">
-                        <div style="display: grid; grid-template-columns: 2fr 1fr 2fr; gap: 10px; margin-bottom: 10px;">
-                            <input type="text" placeholder="Guest Name" class="lunch-name" />
-                            <input type="number" placeholder="Pax" class="lunch-pax" min="1" />
-                            <input type="text" placeholder="Room & Booking Contact" class="lunch-room-contact" />
-                        </div>
-                    </div>
-                </div>
-                <button type="button" onclick="addLunchEntry()" style="background: #e67e22; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; margin-top: 10px;">+ Add Lunch Guest</button>
-            </div>
-
-            <div class="form-group">
                 <h3>🏠 Rooms Available Today (After Check-out)</h3>
                 <div class="room-checkboxes">
                     <!-- Red Fort Villa Rooms 7-14 -->
@@ -495,51 +505,6 @@
         // Data storage
         let hotelData = {};
 
-        function addGuestEntry() {
-            const container = document.getElementById('guestStayContainer');
-            const newEntry = document.createElement('div');
-            newEntry.className = 'guest-entry';
-            newEntry.innerHTML = `
-                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px;">
-                    <input type="text" placeholder="Guest Name & Location" class="guest-name" />
-                    <input type="text" placeholder="Contact Number" class="guest-contact" />
-                    <input type="number" placeholder="Pax" class="guest-pax" min="1" />
-                </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px;">
-                    <input type="text" placeholder="Booking Contact" class="guest-booking" />
-                    <input type="text" placeholder="Room Assigned" class="guest-room" />
-                    <input type="text" placeholder="Arrival Time" class="guest-arrival" />
-                </div>
-                <button type="button" onclick="removeGuestEntry(this)" style="background: #e74c3c; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px;">Remove</button>
-                <hr style="margin: 15px 0; border: 1px solid #eee;">
-            `;
-            container.appendChild(newEntry);
-        }
-
-        function removeGuestEntry(button) {
-            button.parentElement.remove();
-        }
-
-        function addLunchEntry() {
-            const container = document.getElementById('lunchStayContainer');
-            const newEntry = document.createElement('div');
-            newEntry.className = 'lunch-entry';
-            newEntry.innerHTML = `
-                <div style="display: grid; grid-template-columns: 2fr 1fr 2fr; gap: 10px; margin-bottom: 10px;">
-                    <input type="text" placeholder="Guest Name" class="lunch-name" />
-                    <input type="number" placeholder="Pax" class="lunch-pax" min="1" />
-                    <input type="text" placeholder="Room & Booking Contact" class="lunch-room-contact" />
-                </div>
-                <button type="button" onclick="removeLunchEntry(this)" style="background: #e74c3c; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px;">Remove</button>
-                <hr style="margin: 15px 0; border: 1px solid #eee;">
-            `;
-            container.appendChild(newEntry);
-        }
-
-        function removeLunchEntry(button) {
-            button.parentElement.remove();
-        }
-
         function loadToday() {
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('selectedDate').value = today;
@@ -580,76 +545,6 @@
                     checkbox.checked = rooms.includes(checkbox.id);
                 });
 
-                // Load guest stays
-                const guestContainer = document.getElementById('guestStayContainer');
-                guestContainer.innerHTML = '';
-                if (data.guestStays && data.guestStays.length > 0) {
-                    data.guestStays.forEach(guest => {
-                        const entry = document.createElement('div');
-                        entry.className = 'guest-entry';
-                        entry.innerHTML = `
-                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px;">
-                                <input type="text" placeholder="Guest Name & Location" class="guest-name" value="${guest.name || ''}" />
-                                <input type="text" placeholder="Contact Number" class="guest-contact" value="${guest.contact || ''}" />
-                                <input type="number" placeholder="Pax" class="guest-pax" min="1" value="${guest.pax || ''}" />
-                            </div>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px;">
-                                <input type="text" placeholder="Booking Contact" class="guest-booking" value="${guest.booking || ''}" />
-                                <input type="text" placeholder="Room Assigned" class="guest-room" value="${guest.room || ''}" />
-                                <input type="text" placeholder="Arrival Time" class="guest-arrival" value="${guest.arrival || ''}" />
-                            </div>
-                            <button type="button" onclick="removeGuestEntry(this)" style="background: #e74c3c; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px;">Remove</button>
-                            <hr style="margin: 15px 0; border: 1px solid #eee;">
-                        `;
-                        guestContainer.appendChild(entry);
-                    });
-                } else {
-                    guestContainer.innerHTML = `
-                        <div class="guest-entry">
-                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px;">
-                                <input type="text" placeholder="Guest Name & Location" class="guest-name" />
-                                <input type="text" placeholder="Contact Number" class="guest-contact" />
-                                <input type="number" placeholder="Pax" class="guest-pax" min="1" />
-                            </div>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px;">
-                                <input type="text" placeholder="Booking Contact" class="guest-booking" />
-                                <input type="text" placeholder="Room Assigned" class="guest-room" />
-                                <input type="text" placeholder="Arrival Time" class="guest-arrival" />
-                            </div>
-                        </div>
-                    `;
-                }
-
-                // Load lunch stays
-                const lunchContainer = document.getElementById('lunchStayContainer');
-                lunchContainer.innerHTML = '';
-                if (data.lunchStays && data.lunchStays.length > 0) {
-                    data.lunchStays.forEach(lunch => {
-                        const entry = document.createElement('div');
-                        entry.className = 'lunch-entry';
-                        entry.innerHTML = `
-                            <div style="display: grid; grid-template-columns: 2fr 1fr 2fr; gap: 10px; margin-bottom: 10px;">
-                                <input type="text" placeholder="Guest Name" class="lunch-name" value="${lunch.name || ''}" />
-                                <input type="number" placeholder="Pax" class="lunch-pax" min="1" value="${lunch.pax || ''}" />
-                                <input type="text" placeholder="Room & Booking Contact" class="lunch-room-contact" value="${lunch.roomContact || ''}" />
-                            </div>
-                            <button type="button" onclick="removeLunchEntry(this)" style="background: #e74c3c; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px;">Remove</button>
-                            <hr style="margin: 15px 0; border: 1px solid #eee;">
-                        `;
-                        lunchContainer.appendChild(entry);
-                    });
-                } else {
-                    lunchContainer.innerHTML = `
-                        <div class="lunch-entry">
-                            <div style="display: grid; grid-template-columns: 2fr 1fr 2fr; gap: 10px; margin-bottom: 10px;">
-                                <input type="text" placeholder="Guest Name" class="lunch-name" />
-                                <input type="number" placeholder="Pax" class="lunch-pax" min="1" />
-                                <input type="text" placeholder="Room & Booking Contact" class="lunch-room-contact" />
-                            </div>
-                        </div>
-                    `;
-                }
-
                 alert(`Data loaded for ${selectedDate}`);
             } else {
                 clearForm();
@@ -670,44 +565,6 @@
                 availableRooms.push(checkbox.id);
             });
 
-            // Get guest stay details
-            const guestStays = [];
-            document.querySelectorAll('.guest-entry').forEach(entry => {
-                const guestName = entry.querySelector('.guest-name')?.value.trim();
-                const guestContact = entry.querySelector('.guest-contact')?.value.trim();
-                const guestPax = entry.querySelector('.guest-pax')?.value.trim();
-                const guestBooking = entry.querySelector('.guest-booking')?.value.trim();
-                const guestRoom = entry.querySelector('.guest-room')?.value.trim();
-                const guestArrival = entry.querySelector('.guest-arrival')?.value.trim();
-                
-                if (guestName || guestContact || guestPax || guestBooking || guestRoom || guestArrival) {
-                    guestStays.push({
-                        name: guestName,
-                        contact: guestContact,
-                        pax: guestPax,
-                        booking: guestBooking,
-                        room: guestRoom,
-                        arrival: guestArrival
-                    });
-                }
-            });
-
-            // Get lunch stay details
-            const lunchStays = [];
-            document.querySelectorAll('.lunch-entry').forEach(entry => {
-                const lunchName = entry.querySelector('.lunch-name')?.value.trim();
-                const lunchPax = entry.querySelector('.lunch-pax')?.value.trim();
-                const lunchRoomContact = entry.querySelector('.lunch-room-contact')?.value.trim();
-                
-                if (lunchName || lunchPax || lunchRoomContact) {
-                    lunchStays.push({
-                        name: lunchName,
-                        pax: lunchPax,
-                        roomContact: lunchRoomContact
-                    });
-                }
-            });
-
             // Create data object
             const data = {
                 totalRooms: parseInt(document.getElementById('totalRooms').value) || 24,
@@ -721,8 +578,6 @@
                 yesterdaysClosing: parseInt(document.getElementById('yesterdaysClosing').value) || 0,
                 earlyCheckIn: document.getElementById('earlyCheckIn').value || 'Nil',
                 availableRooms: availableRooms,
-                guestStays: guestStays,
-                lunchStays: lunchStays,
                 savedAt: new Date().toISOString()
             };
 
@@ -746,35 +601,6 @@
             document.querySelectorAll('.room-checkboxes input[type="checkbox"]').forEach(checkbox => {
                 checkbox.checked = false;
             });
-
-            // Clear guest stays
-            const guestContainer = document.getElementById('guestStayContainer');
-            guestContainer.innerHTML = `
-                <div class="guest-entry">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px;">
-                        <input type="text" placeholder="Guest Name & Location" class="guest-name" />
-                        <input type="text" placeholder="Contact Number" class="guest-contact" />
-                        <input type="number" placeholder="Pax" class="guest-pax" min="1" />
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px;">
-                        <input type="text" placeholder="Booking Contact" class="guest-booking" />
-                        <input type="text" placeholder="Room Assigned" class="guest-room" />
-                        <input type="text" placeholder="Arrival Time" class="guest-arrival" />
-                    </div>
-                </div>
-            `;
-
-            // Clear lunch stays
-            const lunchContainer = document.getElementById('lunchStayContainer');
-            lunchContainer.innerHTML = `
-                <div class="lunch-entry">
-                    <div style="display: grid; grid-template-columns: 2fr 1fr 2fr; gap: 10px; margin-bottom: 10px;">
-                        <input type="text" placeholder="Guest Name" class="lunch-name" />
-                        <input type="number" placeholder="Pax" class="lunch-pax" min="1" />
-                        <input type="text" placeholder="Room & Booking Contact" class="lunch-room-contact" />
-                    </div>
-                </div>
-            `;
         }
 
         function displayData() {
@@ -817,26 +643,6 @@
 
                 const availableRoomNames = data.availableRooms.map(id => roomLabels[id] || id).join(', ') || 'None';
 
-                // Format guest stays for display
-                let guestStaysDisplay = '';
-                if (data.guestStays && data.guestStays.length > 0) {
-                    guestStaysDisplay = data.guestStays.map((guest, index) => 
-                        `${index + 1}. ${guest.name || 'N/A'} - ${guest.pax || 'N/A'} pax\n   Contact: ${guest.contact || 'N/A'}\n   Booking: ${guest.booking || 'N/A'}\n   Room: ${guest.room || 'N/A'}\n   Arrival: ${guest.arrival || 'N/A'}`
-                    ).join('\n\n');
-                } else {
-                    guestStaysDisplay = 'No guest stays recorded';
-                }
-
-                // Format lunch stays for display
-                let lunchStaysDisplay = '';
-                if (data.lunchStays && data.lunchStays.length > 0) {
-                    lunchStaysDisplay = data.lunchStays.map((lunch, index) => 
-                        `${index + 1}. ${lunch.name || 'N/A'} - ${lunch.pax || 'N/A'} pax\n   ${lunch.roomContact || 'N/A'}`
-                    ).join('\n\n');
-                } else {
-                    lunchStaysDisplay = 'No lunch stays recorded';
-                }
-
                 html += `
                     <div class="data-entry">
                         <h3>${new Date(date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</h3>
@@ -850,14 +656,6 @@
                         <p><strong>Yesterday's Closing:</strong> ${data.yesterdaysClosing}</p>
                         <p><strong>Early Check-in Available:</strong> ${data.earlyCheckIn}</p>
                         <p><strong>Available Rooms:</strong> ${availableRoomNames}</p>
-                        <div style="margin-top: 15px;">
-                            <p><strong>Today's Guest Stays:</strong></p>
-                            <pre style="background: #f8f9fa; padding: 10px; border-radius: 5px; font-size: 12px; white-space: pre-wrap;">${guestStaysDisplay}</pre>
-                        </div>
-                        <div style="margin-top: 15px;">
-                            <p><strong>Yesterday's Lunch Stays:</strong></p>
-                            <pre style="background: #f8f9fa; padding: 10px; border-radius: 5px; font-size: 12px; white-space: pre-wrap;">${lunchStaysDisplay}</pre>
-                        </div>
                         <p><em>Saved on: ${new Date(data.savedAt).toLocaleString()}</em></p>
                     </div>
                 `;
@@ -937,42 +735,6 @@
 
             const availableRoomsText = availableRooms.length > 0 ? availableRooms.join('\n') : 'Nil';
 
-            // Format guest stays for WhatsApp
-            let guestStaysText = '';
-            const guestStayData = [];
-            document.querySelectorAll('.guest-entry').forEach((entry, index) => {
-                const guestName = entry.querySelector('.guest-name')?.value.trim();
-                const guestContact = entry.querySelector('.guest-contact')?.value.trim();
-                const guestPax = entry.querySelector('.guest-pax')?.value.trim();
-                const guestBooking = entry.querySelector('.guest-booking')?.value.trim();
-                const guestRoom = entry.querySelector('.guest-room')?.value.trim();
-                const guestArrival = entry.querySelector('.guest-arrival')?.value.trim();
-                
-                if (guestName || guestContact || guestPax || guestBooking || guestRoom || guestArrival) {
-                    guestStayData.push(`${index + 1}. ${guestName || 'N/A'}- ${guestPax || 'N/A'}pax
-${guestContact || 'N/A'}
-*${guestBooking || 'N/A'}*
-  *${guestRoom || 'N/A'}* 
- *${guestArrival || 'N/A'}*`);
-                }
-            });
-            guestStaysText = guestStayData.length > 0 ? guestStayData.join('\n\n') : 'Nil';
-
-            // Format lunch stays for WhatsApp
-            let lunchStaysText = '';
-            const lunchStayData = [];
-            document.querySelectorAll('.lunch-entry').forEach((entry, index) => {
-                const lunchName = entry.querySelector('.lunch-name')?.value.trim();
-                const lunchPax = entry.querySelector('.lunch-pax')?.value.trim();
-                const lunchRoomContact = entry.querySelector('.lunch-room-contact')?.value.trim();
-                
-                if (lunchName || lunchPax || lunchRoomContact) {
-                    lunchStayData.push(`${index + 1}. ${lunchName || 'N/A'}- ${lunchPax || 'N/A'}pax
-*${lunchRoomContact || 'N/A'}*`);
-                }
-            });
-            lunchStaysText = lunchStayData.length > 0 ? lunchStayData.join('\n\n') : 'Nil';
-
             // Format date
             const dateObj = new Date(selectedDate);
             const formattedDate = dateObj.toLocaleDateString('en-GB', { 
@@ -990,32 +752,6 @@ ${guestContact || 'N/A'}
 📊 *ROOM STATISTICS:*
 • Total No. of Rooms: *${totalRooms}*
 • Total No. of Check-in: *${checkIn}*
-• Total No. of Check-out: *${checkOut}*
-
-🔄 *OPERATIONS:*
-• Room Shifting: *${roomShifting}*
-• Late Check-in: *${lateCheckIn}*
-• Stay Back: *${stayBack}*
-• Under Maintenance: *${underMaintenance}*
-
-📈 *OCCUPANCY:*
-• Today's Closing: *${todaysClosing}*
-• Yesterday's Closing: *${yesterdaysClosing}*
-
-🕐 *ROOMS AVAILABLE FOR EARLY CHECK-IN:*
-${earlyCheckIn}
-
-🏠 *ROOMS AVAILABLE FOR TODAY (AFTER CHECK OUT):*
-${availableRoomsText}
-
-🏨 *TODAY'S STAY DETAILS:*
-${guestStaysText}
-
-🍽️ *YESTERDAY'S STAY FOR LUNCH:*
-${lunchStaysText}
-
----
-Generated on: ${new Date().toLocaleString()}`;*
 • Total No. of Check-out: *${checkOut}*
 
 🔄 *OPERATIONS:*
